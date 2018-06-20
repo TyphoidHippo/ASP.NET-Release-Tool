@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ASP.NET_Release_Tool
 {
@@ -261,11 +262,10 @@ namespace ASP.NET_Release_Tool
         {
             pPercent = pPercent < 0 ? 0 : pPercent > 1 ? 1 : pPercent;
             int range = this.progressBarTotal.Maximum - this.progressBarTotal.Minimum;
-            this.progressBarTotal.Value = this.progressBarTotal.Minimum +
-                (int)(pPercent * range);
+            this.progressBarTotal.InvokeSetValue(
+                this.progressBarTotal.Minimum + (int)(pPercent * range));
 
-            this.lblProgressTotal.Text = pMessage;
-
+            this.lblProgressTotal.InvokeSetText(pMessage);
             this._Log.WriteLine("Main Event: " + pMessage);
         }
 
@@ -273,10 +273,10 @@ namespace ASP.NET_Release_Tool
         {
             pPercent = pPercent < 0 ? 0 : pPercent > 1 ? 1 : pPercent;
             int range = this.progressBarCurrent.Maximum - this.progressBarCurrent.Minimum;
-            this.progressBarCurrent.Value = this.progressBarCurrent.Minimum +
-                (int)(pPercent * range);
+            this.progressBarCurrent.InvokeSetValue(
+                this.progressBarCurrent.Minimum + (int)(pPercent * range));
 
-            this.lblProgressCurrent.Text = pMessage;
+            this.lblProgressCurrent.InvokeSetText(pMessage);
             this._Log.WriteLine("  Task Event: " + pMessage);
         }
 
@@ -284,29 +284,33 @@ namespace ASP.NET_Release_Tool
         {
             this.EnableInputs(false);
             List<string> errors = new List<string>();
-            for (int i = 0; i < pCommands.Count; i++)
-            {
-                var cmd = pCommands[i];
-                this.UpdateTotalStatus(i / (double)pCommands.Count, cmd.Item2);
-                errors.AddRange(cmd.Item1());
-            }
 
-            this.UpdateTotalStatus(1.0, pMainCommandDescription + " completed!");
-            this.EnableInputs(true);
-
-            if (errors.Count > 0)
+            Task.Run(() =>
             {
-                MessageBox.Show(string.Join("\r\n", errors), "Errors encountered while " + pMainCommandDescription);
-            }
+                for (int i = 0; i < pCommands.Count; i++)
+                {
+                    var cmd = pCommands[i];
+                    this.UpdateTotalStatus(i / (double)pCommands.Count, cmd.Item2);
+                    errors.AddRange(cmd.Item1());
+                }
+
+                this.UpdateTotalStatus(1.0, pMainCommandDescription + " completed!");
+
+                if (errors.Count > 0)
+                {
+                    MessageBox.Show(string.Join("\r\n", errors), "Errors encountered while " + pMainCommandDescription);
+                }
+                this.EnableInputs(true);
+            });
         }
 
         private void EnableInputs(bool pEnabled)
         {
-            this.chkClearLiveFiles.Enabled = pEnabled;
-            this.btnReleaseDemoBeta.Enabled = pEnabled;
-            this.btnReleaseLive.Enabled = pEnabled;
-            this.btnRestoreBackup.Enabled = pEnabled;
-            this.btnRestoreStable.Enabled = pEnabled;
+            this.chkClearLiveFiles.InvokeSetEnabled(pEnabled);
+            this.btnReleaseDemoBeta.InvokeSetEnabled(pEnabled);
+            this.btnReleaseLive.InvokeSetEnabled(pEnabled);
+            this.btnRestoreBackup.InvokeSetEnabled(pEnabled);
+            this.btnRestoreStable.InvokeSetEnabled(pEnabled);
 
             foreach (var pc in this._PathControls) { pc.Enabled = pEnabled; }
         }
@@ -332,7 +336,6 @@ namespace ASP.NET_Release_Tool
                 }
             }
         }
-
 
         #region Control Events
         private void btnReleaseLive_Click(object sender, EventArgs e)
@@ -439,6 +442,12 @@ namespace ASP.NET_Release_Tool
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Debugger.Break();
         }
     }
     #endregion
@@ -449,6 +458,30 @@ namespace ASP.NET_Release_Tool
         {
             while (p.InnerException != null) { p = p.InnerException; }
             return p.Message;
+        }
+
+        public static void SafeInvoke<T>(this T p, Action<T> pAction) where T : Control
+        { 
+            if(p.InvokeRequired)
+            {
+                p.Invoke(pAction, p);
+            }
+            else
+            {
+                pAction(p);
+            }
+        }
+        public static void InvokeSetText(this Label p, string pText)
+        {
+            p.SafeInvoke((x) => x.Text = pText);
+        }
+        public static void InvokeSetValue(this ProgressBar p, int pValue)
+        {
+            p.SafeInvoke((x) => x.Value = pValue);
+        }
+        public static void InvokeSetEnabled(this Control p, bool pEnabled)
+        {
+            p.SafeInvoke((x) => x.Enabled = pEnabled);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace ASP.NET_Release_Tool.PathControls
         public bool Enabled
         {
             get { return this._Button.Enabled; }
-            set { this._Button.Enabled = value; }
+            set { this._Button.InvokeSetEnabled(value); }
         }
 
         public readonly string PathKey;
