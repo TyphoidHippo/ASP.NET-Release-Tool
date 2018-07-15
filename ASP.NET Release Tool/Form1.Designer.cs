@@ -64,13 +64,17 @@
             this.txtPathRootDemoBeta = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.btnReleaseLive = new System.Windows.Forms.Button();
-            this.chkClearLiveFiles = new System.Windows.Forms.CheckBox();
+            this.chkReleaseLive_CleanAfterRelease = new System.Windows.Forms.CheckBox();
             this._SystemTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.chkReleaseLive_CleanBeforeRelease = new System.Windows.Forms.CheckBox();
+            this.chkReleaseLive_CopyCurrentReleaseToStable = new System.Windows.Forms.CheckBox();
+            this.txtIORetries = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnReleaseDemoBeta
             // 
-            this.btnReleaseDemoBeta.Location = new System.Drawing.Point(9, 219);
+            this.btnReleaseDemoBeta.Location = new System.Drawing.Point(9, 237);
             this.btnReleaseDemoBeta.Name = "btnReleaseDemoBeta";
             this.btnReleaseDemoBeta.Size = new System.Drawing.Size(97, 23);
             this.btnReleaseDemoBeta.TabIndex = 0;
@@ -80,7 +84,7 @@
             // 
             // btnRestoreStable
             // 
-            this.btnRestoreStable.Location = new System.Drawing.Point(9, 248);
+            this.btnRestoreStable.Location = new System.Drawing.Point(9, 266);
             this.btnRestoreStable.Name = "btnRestoreStable";
             this.btnRestoreStable.Size = new System.Drawing.Size(97, 23);
             this.btnRestoreStable.TabIndex = 1;
@@ -220,7 +224,7 @@
             // 
             // btnRestoreBackup
             // 
-            this.btnRestoreBackup.Location = new System.Drawing.Point(9, 277);
+            this.btnRestoreBackup.Location = new System.Drawing.Point(9, 295);
             this.btnRestoreBackup.Name = "btnRestoreBackup";
             this.btnRestoreBackup.Size = new System.Drawing.Size(97, 23);
             this.btnRestoreBackup.TabIndex = 17;
@@ -282,14 +286,14 @@
             // 
             // progressBarTotal
             // 
-            this.progressBarTotal.Location = new System.Drawing.Point(127, 235);
+            this.progressBarTotal.Location = new System.Drawing.Point(127, 253);
             this.progressBarTotal.Name = "progressBarTotal";
             this.progressBarTotal.Size = new System.Drawing.Size(664, 23);
             this.progressBarTotal.TabIndex = 30;
             // 
             // progressBarCurrent
             // 
-            this.progressBarCurrent.Location = new System.Drawing.Point(127, 277);
+            this.progressBarCurrent.Location = new System.Drawing.Point(127, 295);
             this.progressBarCurrent.Name = "progressBarCurrent";
             this.progressBarCurrent.Size = new System.Drawing.Size(664, 23);
             this.progressBarCurrent.TabIndex = 31;
@@ -297,7 +301,7 @@
             // lblProgressCurrent
             // 
             this.lblProgressCurrent.AutoSize = true;
-            this.lblProgressCurrent.Location = new System.Drawing.Point(124, 261);
+            this.lblProgressCurrent.Location = new System.Drawing.Point(124, 279);
             this.lblProgressCurrent.Name = "lblProgressCurrent";
             this.lblProgressCurrent.Size = new System.Drawing.Size(90, 13);
             this.lblProgressCurrent.TabIndex = 32;
@@ -306,7 +310,7 @@
             // lblProgressTotal
             // 
             this.lblProgressTotal.AutoSize = true;
-            this.lblProgressTotal.Location = new System.Drawing.Point(124, 219);
+            this.lblProgressTotal.Location = new System.Drawing.Point(124, 237);
             this.lblProgressTotal.Name = "lblProgressTotal";
             this.lblProgressTotal.Size = new System.Drawing.Size(75, 13);
             this.lblProgressTotal.TabIndex = 33;
@@ -365,15 +369,17 @@
             this.btnReleaseLive.UseVisualStyleBackColor = true;
             this.btnReleaseLive.Click += new System.EventHandler(this.btnReleaseLive_Click);
             // 
-            // chkClearLiveFiles
+            // chkReleaseLive_CleanAfterRelease
             // 
-            this.chkClearLiveFiles.AutoSize = true;
-            this.chkClearLiveFiles.Location = new System.Drawing.Point(591, 210);
-            this.chkClearLiveFiles.Name = "chkClearLiveFiles";
-            this.chkClearLiveFiles.Size = new System.Drawing.Size(97, 17);
-            this.chkClearLiveFiles.TabIndex = 40;
-            this.chkClearLiveFiles.Text = "Clear Live Files";
-            this.chkClearLiveFiles.UseVisualStyleBackColor = true;
+            this.chkReleaseLive_CleanAfterRelease.AutoSize = true;
+            this.chkReleaseLive_CleanAfterRelease.Checked = true;
+            this.chkReleaseLive_CleanAfterRelease.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkReleaseLive_CleanAfterRelease.Location = new System.Drawing.Point(518, 210);
+            this.chkReleaseLive_CleanAfterRelease.Name = "chkReleaseLive_CleanAfterRelease";
+            this.chkReleaseLive_CleanAfterRelease.Size = new System.Drawing.Size(174, 17);
+            this.chkReleaseLive_CleanAfterRelease.TabIndex = 40;
+            this.chkReleaseLive_CleanAfterRelease.Text = "Remove extra files after release";
+            this.chkReleaseLive_CleanAfterRelease.UseVisualStyleBackColor = true;
             // 
             // _SystemTrayIcon
             // 
@@ -381,12 +387,52 @@
             this._SystemTrayIcon.Text = "ASP.NET Release Tool";
             this._SystemTrayIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._SystemTrayIcon_MouseDoubleClick);
             // 
+            // chkReleaseLive_CleanBeforeRelease
+            // 
+            this.chkReleaseLive_CleanBeforeRelease.AutoSize = true;
+            this.chkReleaseLive_CleanBeforeRelease.Location = new System.Drawing.Point(518, 164);
+            this.chkReleaseLive_CleanBeforeRelease.Name = "chkReleaseLive_CleanBeforeRelease";
+            this.chkReleaseLive_CleanBeforeRelease.Size = new System.Drawing.Size(173, 17);
+            this.chkReleaseLive_CleanBeforeRelease.TabIndex = 41;
+            this.chkReleaseLive_CleanBeforeRelease.Text = "Clear all live files before release";
+            this.chkReleaseLive_CleanBeforeRelease.UseVisualStyleBackColor = true;
+            // 
+            // chkReleaseLive_CopyCurrentReleaseToStable
+            // 
+            this.chkReleaseLive_CopyCurrentReleaseToStable.AutoSize = true;
+            this.chkReleaseLive_CopyCurrentReleaseToStable.Location = new System.Drawing.Point(518, 187);
+            this.chkReleaseLive_CopyCurrentReleaseToStable.Name = "chkReleaseLive_CopyCurrentReleaseToStable";
+            this.chkReleaseLive_CopyCurrentReleaseToStable.Size = new System.Drawing.Size(169, 17);
+            this.chkReleaseLive_CopyCurrentReleaseToStable.TabIndex = 42;
+            this.chkReleaseLive_CopyCurrentReleaseToStable.Text = "Move current release to stable";
+            this.chkReleaseLive_CopyCurrentReleaseToStable.UseVisualStyleBackColor = true;
+            // 
+            // txtIORetries
+            // 
+            this.txtIORetries.Location = new System.Drawing.Point(127, 179);
+            this.txtIORetries.Name = "txtIORetries";
+            this.txtIORetries.Size = new System.Drawing.Size(72, 20);
+            this.txtIORetries.TabIndex = 44;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(9, 182);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(59, 13);
+            this.label9.TabIndex = 43;
+            this.label9.Text = "I/O Retries";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(804, 312);
-            this.Controls.Add(this.chkClearLiveFiles);
+            this.ClientSize = new System.Drawing.Size(804, 328);
+            this.Controls.Add(this.txtIORetries);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.chkReleaseLive_CopyCurrentReleaseToStable);
+            this.Controls.Add(this.chkReleaseLive_CleanBeforeRelease);
+            this.Controls.Add(this.chkReleaseLive_CleanAfterRelease);
             this.Controls.Add(this.btnReleaseLive);
             this.Controls.Add(this.btnPathConfigDemoBeta);
             this.Controls.Add(this.txtPathConfigDemoBeta);
@@ -468,8 +514,12 @@
         private System.Windows.Forms.TextBox txtPathRootDemoBeta;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnReleaseLive;
-        private System.Windows.Forms.CheckBox chkClearLiveFiles;
+        private System.Windows.Forms.CheckBox chkReleaseLive_CleanAfterRelease;
         private System.Windows.Forms.NotifyIcon _SystemTrayIcon;
+        private System.Windows.Forms.CheckBox chkReleaseLive_CleanBeforeRelease;
+        private System.Windows.Forms.CheckBox chkReleaseLive_CopyCurrentReleaseToStable;
+        private System.Windows.Forms.TextBox txtIORetries;
+        private System.Windows.Forms.Label label9;
     }
 }
 
