@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ASP.NET_Release_Tool
 {
-    static class FileOperations
+    static class FileOperations 
     {
         public static void AttemptAction(int pIORetries, Action pAction, string pActionDescriptionForErrorMessage, List<string> pErrorOut, StreamWriter pLogger)
         {
